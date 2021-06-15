@@ -1,46 +1,71 @@
 # P.CL Kubernetes Sample Applications
 ## Echo App
 ```
-# Download Samples
+# Deploy a sample echo application.
+
+# Download Sample Apps.
 git clone https://github.com/powerds/pcl-sample-apps.git
 cd pcl-sample-apps
 
-# Deploy echo app
-kubectl apply -f echo.yaml
+# Deploy a deployment.
+kubectl apply -f echo-1-deployment.yaml
 
-# Check your pod is ready
-kubectl get pod
+# Check the deployment is ready.
+watch "kubectl get deployment echo"
 
-# Get Your Cluster ip
-export YOUR_EXTERNAL_IP=$(kubectl get nodes -o wide | grep control-plane | awk {'print $7'})
+# Deploy a service.
+kubectl apply -f echo-2-service.yaml
 
-# Add domain name to your local hosts file for access your echo app
-echo "$YOUR_EXTERNAL_IP echo.pcl.com" | sudo tee -a /etc/hosts
+# Check the service is ready.
+kubectl get service echo-service
 
-# Access your echo app
+# Deploy an ingress.
+kubectl apply -f echo-3-ingress.yaml
+
+# Check the ingress is ready.
+kubectl get ingress echo-ingress
+
+# Add ingress domain name to your local hosts file for access to the echo app.
+echo "$EXTERNAL_IP echo.pcl.com" | sudo tee -a /etc/hosts
+
+# Access to the echo app.
 curl http://echo.pcl.com
 ```
 ## Nginx with PVC
 ```
-# Download Samples
+# Deploy a sample nginx appication with 1G persistent volume.
+
+# Download Sample Apps.
 git clone https://github.com/powerds/pcl-sample-apps.git
 cd pcl-sample-apps
 
-# Deploy nginx app with persistent volume
-kubectl apply -f nginx-with-pvc.yaml
+# Deploy a persistent volume.
+kubectl apply -f nginx-1-pvc.yaml
 
-# Check your persistent volume is ready
+# Check the persistent volume is ready.
 kubectl get pvc
 
-# Check your pod is ready
-kubectl get pod
+# Deploy a pod.
+kubectl apply -f nginx-2-pod.yaml
 
-# Get Your Cluster ip
-export YOUR_EXTERNAL_IP=$(kubectl get nodes -o wide | grep control-plane | awk {'print $7'})
+# Check the deployment is ready.
+watch "kubectl get pod nginx"
 
-# Add domain name to your local hosts file for access your nginx app
-echo "$YOUR_EXTERNAL_IP nginx.pcl.com" | sudo tee -a /etc/hosts
+# Deploy a service.
+kubectl apply -f nginx-3-service.yaml
 
-# Access your echo app
+# Check the service is ready.
+kubectl get service nginx-service
+
+# Deploy an ingress.
+kubectl apply -f nginx-4-ingress.yaml
+
+# Check the ingress is ready.
+kubectl get ingress nginx-ingress
+
+# Add ingress domain name to your local hosts file for access to the nginx app
+echo "$EXTERNAL_IP nginx.pcl.com" | sudo tee -a /etc/hosts
+
+# Access to the nginx app
 curl http://nginx.pcl.com
 ```
